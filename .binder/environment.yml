@@ -1,5 +1,5 @@
 dependencies:
-  - bokeh
+  - bokeh==2.3.0
   - pandas
   - pip
   - pip:
