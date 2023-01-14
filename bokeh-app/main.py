@@ -1,3 +1,4 @@
+from os.path import join, dirname
 import pandas as pd
 # ignore pandas chained assignment warning
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -62,7 +63,7 @@ label_with_unit = {'box_height': 'Box height / m',
 #%%
 # import results.csv
 my_csv = 'results.csv'
-results = pd.read_csv(my_csv)
+results = pd.read_csv(join(dirname(__file__), my_csv))
 #%%
 # Parameters which are varied
 # 1. colloid height
