@@ -1,8 +1,6 @@
 dependencies:
-  - bokeh==2.3.0
-  - jinja2==3.0.3
+  - bokeh
   - pandas
   - pip
   - pip:
-    - nbserverproxy==0.8.8
-    - jupyter-server-proxy==3.0.0
+    - jupyter-server-proxy
