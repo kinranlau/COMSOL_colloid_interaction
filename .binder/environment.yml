@@ -1,5 +1,6 @@
 dependencies:
   - bokeh==2.3.0
+  - jinja2==3.0.3
   - pandas
   - pip
   - pip:
