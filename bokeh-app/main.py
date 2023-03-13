@@ -10,25 +10,43 @@ from headers import *
 # import results.csv
 my_csv = 'results.csv'
 results = pd.read_csv(join(dirname(__file__), my_csv))
+
+#%%
+# add dimensional units for potentials and particle radius
+results['Particle potential / mV'] =results[label_with_unit['particle_potential']].round(decimals = 4) * 1000
+results['Defect potential / mV'] = results[label_with_unit['defect_potential']].round(decimals = 4) * 1000
+results['Surface potential / mV'] = results[label_with_unit['surface_potential']].round(decimals = 4) * 1000
+
+results['Colloid radius / nm'] = (results[label_with_unit['colloid_radius']] * 1e9).round(decimals= 1)
 #%%
 # Parameters which are varied
 # 1. colloid height
-# 2. colloid radius
-# 3. conc.
-# 4. V_particle
-# 5. V_defect
-# 6. V_surface
-# 7. defect density
-
 colloid_height_unique = sorted(results[label_with_unit['colloid_height_debye']].unique())
-colloid_radius_unique = sorted(results[label_with_unit['rel_radius']].unique())
 
+# 2. colloid radius
+# use dimensional nm instead of relative radius to defect length
+colloid_radius_unique = sorted(results['Colloid radius / nm'].unique())
+#colloid_radius_unique = sorted(results[label_with_unit['rel_radius']].unique())
+
+# 3. conc.
 conc_unique = sorted(results[label_with_unit['conc']].unique())
 
-V_particle_unique =  sorted(results[label_with_unit['particle_potential_dless']].unique())
-V_defect_unique =  sorted(results[label_with_unit['defect_potential_dless']].unique())
-V_surface_unique =  sorted(results[label_with_unit['surface_potential_dless']].unique())
+# 4. V_particle
+# use dimensional mV instead of dimensionless potential
+V_particle_unique =  sorted(results['Particle potential / mV'].unique())
+#V_particle_unique =  sorted(results[label_with_unit['particle_potential_dless']].unique())
 
+# 5. V_defect
+# use dimensional mV instead of dimensionless potential
+V_defect_unique =  sorted(results['Defect potential / mV'].unique())
+#V_defect_unique =  sorted(results[label_with_unit['defect_potential_dless']].unique())
+
+# 6. V_surface
+# use dimensional mV instead of dimensionless potential
+V_surface_unique =  sorted(results['Surface potential / mV'].unique())
+#V_surface_unique =  sorted(results[label_with_unit['surface_potential_dless']].unique())
+
+# 7. defect density
 DD_unique = sorted(results[label_with_unit['def_density']].unique())
 
 
@@ -69,7 +87,7 @@ defect_desc = Div(text = f'''
                 ''')
 
 avg_pot_desc = Div(text = f'''
-                   (Surface + Defect) potential = {avg_pot:.3f} <br> <br>
+                   (Surface + Defect) potential (mV) = {avg_pot:.1f} <br> <br>
                    ''')
                    
 hamaker_desc = Div(text = f'''
@@ -90,19 +108,19 @@ hamaker_desc = Div(text = f'''
 # 7. defect density
 
 # 8. vdw Hamaker constant
-title_radius = Div(text="$$R$$: Particle radius (L<sub>D</sub>)")
+title_radius = Div(text="$$R$$: Particle radius (nm)")
 slider_radius = Select(title= "", options= [str(num) for num in colloid_radius_unique], value=str(colloid_radius_unique[2]))
 
 title_conc = Div(text="$$Conc$$: Concentration (mM)")
 slider_conc = Select(title="", options= [str(num) for num in conc_unique], value=str(conc_unique[-1]))
 
-title_particleV = Div(text="$$V_{Part}$$: Particle potential (dimensionless)")
+title_particleV = Div(text="$$V_{Part}$$: Particle potential (mV)")
 slider_particleV = Select(title="", options= [str(num) for num in V_particle_unique], value=str(V_particle_unique[0]))
 
-title_defectV = Div(text="$$V_{Def}$$: Defect potential (dimensionless)")
+title_defectV = Div(text="$$V_{Def}$$: Defect potential (mV)")
 slider_defectV = Select(title="", options= [str(num) for num in V_defect_unique], value=str(V_defect_unique[1]))
 
-title_surfaceV = Div(text="$$V_{Surf}$$: Surface potential (dimensionless)")
+title_surfaceV = Div(text="$$V_{Surf}$$: Surface potential (mV)")
 slider_surfaceV = Select(title="", options= [str(num) for num in V_surface_unique], value=str(V_surface_unique[0]))
 
 title_defect_density = Div(text="$$DD$$: Defect density (/)")
@@ -292,17 +310,18 @@ def select_parameters():
         defectV_val = V_defect_unique[0]  
     
     selected_df = results[\
-    (results[label_with_unit['rel_radius']] == radius_val) & \
+    (results['Colloid radius / nm'] == radius_val) & \
     (results[label_with_unit['conc']] == conc_val) & \
-    (results[label_with_unit['particle_potential_dless']] == particleV_val) & \
-    (results[label_with_unit['defect_potential_dless']] == defectV_val) & \
-    (results[label_with_unit['surface_potential_dless']] == surfaceV_val) & \
+    (results['Particle potential / mV'] == particleV_val) & \
+    (results['Defect potential / mV'] == defectV_val) & \
+    (results['Surface potential / mV'] == surfaceV_val) & \
     (results[label_with_unit['def_density']] == defect_den_val)]
 
     selected_df = selected_df.sort_values(label_with_unit['colloid_height_debye'])
     
     # average surface potential
-    avg_pot = selected_df[label_with_unit['average_surface_potential']].iloc[-1]
+    # use dimensional mV instead of dimensionless potential
+    avg_pot = selected_df[label_with_unit['average_surface_potential']].iloc[-1] * 1000*thermal_voltage
     
     # vdw = - (hamaker * r) / (6d)
     vdw = - (hamaker_val * 1e-21 * selected_df[label_with_unit['colloid_radius']]) / (6.0 * selected_df[label_with_unit['colloid_height_debye']] * selected_df[label_with_unit['debye']])
@@ -363,7 +382,7 @@ def update():
     
     # update average potential
     avg_pot_desc.text = f'''
-                   (Surface + Defect) potential = {avg_pot:.3f} <br> <br>
+                   (Surface + Defect) potential (mV) = {avg_pot:.1f} <br> <br>
                    '''
     
     
