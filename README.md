@@ -2,7 +2,7 @@
 
 See the original paper: 
 
-*A Multi-Parameter Study of the Colloidal Interaction between Au and TiO<sub>2</sub>: The Role of Surface Potential, Concentration and Defects*
+*The Multivariate Interaction between Au and TiO<sub>2</sub> Colloids: The Role of Surface Potential, Concentration and Defects*
 
 <br></br>
 **There are 2 main components in this repository:**
