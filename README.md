@@ -7,7 +7,7 @@ See the original paper:
 <br></br>
 **There are 2 main components in this repository:**
 1. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kinranlau/COMSOL_colloid_interaction/blob/main/SVM_prediction/%5BGUI%5D_Predict_colloid_interaction_SVM.ipynb) A **SVM model** for predicting whether a particular interaction is favorable, available with GUI in a Google Colab notebook
-2. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kinranlau/COMSOL_colloid_interaction/HEAD?urlpath=%2Fproxy%2F5006%2Fbokeh-app) An **interactive energy plot** for exploring the simulated data, visualized by Bokeh and hosted on Binder
+2. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kinranlau/COMSOL_colloid_interaction/main?urlpath=%2Fproxy%2F5006%2Fbokeh-app) An **interactive energy plot** for exploring the simulated data, visualized by Bokeh and hosted on Binder
 ---
 
 ## SVM for predicting the interaction outcome [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kinranlau/COMSOL_colloid_interaction/blob/main/SVM_prediction/%5BGUI%5D_Predict_colloid_interaction_SVM.ipynb)
@@ -29,7 +29,7 @@ See the original paper:
 - The data used for training the SVM is available at `/SVM_prediction/results_varyvdw_SVM.csv`
 
 
-## Interactive visualization of the energy plots [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kinranlau/COMSOL_colloid_interaction/HEAD?urlpath=%2Fproxy%2F5006%2Fbokeh-app)
+## Interactive visualization of the energy plots [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kinranlau/COMSOL_colloid_interaction/main?urlpath=%2Fproxy%2F5006%2Fbokeh-app)
 <p align="center">
   <img src="https://github.com/kinranlau/COMSOL_colloid_interaction/blob/main/bokeh-app/bokeh%20demonstration.gif?raw=true" width="700">
 </p>
