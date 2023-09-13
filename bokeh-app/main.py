@@ -42,14 +42,16 @@ V_defect_unique =  sorted(results['Defect potential / mV'].unique())
 #V_defect_unique =  sorted(results[label_with_unit['defect_potential_dless']].unique())
 
 # 6. V_surface
+# only extract unique values (4) for defective surface, because there are lot more unique values (21) for normal surface
+results_def = results[results[label_with_unit['def_density']] != 0]
 # use dimensional mV instead of dimensionless potential
-V_surface_unique =  sorted(results['Surface potential / mV'].unique())
+V_surface_unique =  sorted(results_def['Surface potential / mV'].unique())
 #V_surface_unique =  sorted(results[label_with_unit['surface_potential_dless']].unique())
 
 # 7. defect density
 DD_unique = sorted(results[label_with_unit['def_density']].unique())
 
-
+#%%
 # import bokeh packages
 from bokeh.layouts import column, row, grid
 from bokeh.plotting import figure, output_file, show
@@ -87,13 +89,14 @@ defect_desc = Div(text = f'''
                 ''')
 
 avg_pot_desc = Div(text = f'''
-                   (Surface + Defect) potential (mV) = {avg_pot:.1f} <br> <br>
+                   Effective potential (surface + defect) (mV) = {avg_pot:.1f} <br> <br>
                    ''')
                    
 hamaker_desc = Div(text = f'''
                    Hamaker constant (zJ) in water: <br>
-                   TiO<sub>2</sub> - TiO<sub>2</sub>: ~ 50-60 <br>
-                   Au - Au: ~ 90-300
+                   Au - TiO<sub>2</sub>: ~ 70-130 <br>
+                   Au - Au: ~ 90-300 <br>
+                   TiO<sub>2</sub> - TiO<sub>2</sub>: ~ 50-60
                    ''')
 
 # Create Input controls (selectors)
@@ -128,7 +131,7 @@ slider_defect_density = Select(title="", options= [str(num) for num in DD_unique
 
 title_vdw = Div(text="$$A_H$$: Hamaker constant (zJ)")
 slider_vdw = Slider(title="", start=0, end=200, value=100, step=1)
-
+#%%
 # Create a "dummy"/"framework" of the Column Data Source to be plotted later with the selected DataFrame
 config = ColumnDataSource(data=dict(height_map=[], 
                                     particle_map=[],
@@ -288,7 +291,7 @@ l = grid([
 
 #show(l)
 
-
+#%%
 # A function to filter the DataFrame with the specific configurations in question (e.g. particle radius, defect potential)
 # Then use this selected DataFrame to plot and update the graphs
 def select_parameters():
@@ -301,11 +304,11 @@ def select_parameters():
     defect_den_val = float(slider_defect_density.value)
     
     hamaker_val = slider_vdw.value
-    # for the case without defects, Vdefect = 0 and defect density = 0
-    # we want to bundle them together so changing one will update another immediately
-    if defectV_val == V_defect_unique[0]:
-        defect_den_val = DD_unique[0]
-        
+
+    # for cases without defects, Vdefect = 0 and defect density = 0
+    # but we also have defective cases when Vdefect = 0, but defect density != 0
+    # so if defect density is set to 0, then Vdefect should be automatically set to 0 as well
+    # but if Vdefect is set to 0, defect density doesn't have to be 0
     if defect_den_val == DD_unique[0]:
         defectV_val = V_defect_unique[0]  
     
@@ -382,11 +385,10 @@ def update():
     
     # update average potential
     avg_pot_desc.text = f'''
-                   (Surface + Defect) potential (mV) = {avg_pot:.1f} <br> <br>
+                   Effective potential (surface + defect) (mV) = {avg_pot:.1f} <br> <br>
                    '''
-    
-    
-    
+
+#%%   
 # Comply all the sliders and plots together    
 controls = [slider_particleV, slider_surfaceV, slider_defectV, slider_defect_density, slider_conc, slider_radius, slider_vdw]
 for control in controls:
@@ -406,7 +408,7 @@ inputs = column(
     width=320)
 
 #show(inputs)
-
+#%%
 plot = row(inputs, l, sizing_mode="scale_height")
 
 update()  # initial load of the data
