@@ -2,7 +2,7 @@
 
 See the original paper: 
 
-*The Multivariate Interaction between Au and TiO<sub>2</sub> Colloids: The Role of Surface Potential, Concentration and Defects*
+[*The Multivariate Interaction between Au and TiO<sub>2</sub> Colloids: The Role of Surface Potential, Concentration, and Defects*](https://doi.org/10.1039/D3NR06205H)
 
 <br></br>
 **There are 2 main components in this repository:**
@@ -34,7 +34,7 @@ See the original paper:
   <img src="https://github.com/kinranlau/COMSOL_colloid_interaction/blob/main/bokeh-app/bokeh%20demonstration.gif?raw=true" width="700">
 </p>
 
-- A total of 5040 conditions were simulated by varying $V_{Part}$, $V_{Surf}$, $V_{Def}$, $DD$, $Conc$, $R$
+- A total of 6000 conditions were simulated by varying $V_{Part}$, $V_{Surf}$, $V_{Def}$, $DD$, $Conc$, $R$
 - The van der Waals contribution can also be varied by changing $A_H$
 - Upon a change in the parameters, the corresponding energy curves will be updated interactively
 - The raw data can be found in `/bokeh-app/results.csv` and the headers in `/bokeh-app/headers.py`
